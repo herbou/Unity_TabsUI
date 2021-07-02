@@ -9,9 +9,7 @@ namespace EasyUI.Tabs {
 
    public class TabsUI : MonoBehaviour {
 
-      [System.Serializable] public class TabsUIEvent : UnityEvent <int> {
-
-      }
+      [System.Serializable] public class TabsUIEvent : UnityEvent <int> {}
 
       [Header ("Tabs customization :")]
       [SerializeField] private Color themeColor = Color.gray ;
