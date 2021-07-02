@@ -1,4 +1,4 @@
-# Unity_TabsUI
+# Unity TabsUI
 
 Video tutorial: https://youtu.be/p9kRAdh_3Ks
 
