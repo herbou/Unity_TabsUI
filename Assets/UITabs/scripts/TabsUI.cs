@@ -6,10 +6,15 @@ using UnityEngine.Events ;
 //------- Email       : hamza95herbou@gmail.com
 
 namespace EasyUI.Tabs {
+   public enum TabsType{
+      Horizontal,
+      Vertical
+   }
+   public abstract class TabsUI : MonoBehaviour {
 
-   public class TabsUI : MonoBehaviour {
+      [System.Serializable] public class TabsUIEvent : UnityEvent <int> {
 
-      [System.Serializable] public class TabsUIEvent : UnityEvent <int> {}
+      }
 
       [Header ("Tabs customization :")]
       [SerializeField] private Color themeColor = Color.gray ;
@@ -21,11 +26,12 @@ namespace EasyUI.Tabs {
       private TabButtonUI[] tabBtns ;
       private GameObject[] tabContent ;
 
-      private HorizontalLayoutGroup tabsBtnsHorizontalLayoutGroup ;
+      #if UNITY_EDITOR
+      private LayoutGroup layoutGroup ;
+      #endif
 
       private Color tabColorActive, tabColorInactive ;
       private int current, previous ;
-      private float tabHeightActive, tabHeightInactive ;
 
       private Transform parentBtns, parentContent ;
 
@@ -66,9 +72,6 @@ namespace EasyUI.Tabs {
          tabColorActive = tabBtns [ 0 ].uiImage.color ;
          tabColorInactive = tabBtns [ 1 ].uiImage.color ;
 
-         tabHeightActive = tabBtns [ 0 ].uiLayoutElement.preferredHeight ;
-         tabHeightInactive = tabBtns [ 1 ].uiLayoutElement.preferredHeight ;
-
          tabBtns [ 0 ].uiButton.interactable = false ;
          tabContent [ 0 ].SetActive (true) ;
       }
@@ -87,15 +90,13 @@ namespace EasyUI.Tabs {
             tabBtns [ previous ].uiImage.color = tabColorInactive ;
             tabBtns [ current ].uiImage.color = tabColorActive ;
 
-            tabBtns [ previous ].uiLayoutElement.preferredHeight = tabHeightInactive ;
-            tabBtns [ current ].uiLayoutElement.preferredHeight = tabHeightActive ;
-
             tabBtns [ previous ].uiButton.interactable = true ;
             tabBtns [ current ].uiButton.interactable = false ;
          }
       }
 
 
+      #if UNITY_EDITOR
       public void UpdateThemeColor (Color color) {
          tabBtns [ 0 ].uiImage.color = color ;
          Color colorDark = DarkenColor (color, 0.3f) ;
@@ -112,8 +113,7 @@ namespace EasyUI.Tabs {
          return Color.HSVToRGB (h, s, v) ;
       }
 
-      #if UNITY_EDITOR
-      private void OnValidate () {
+      public void Validate (TabsType type) {
          parentBtns = transform.GetChild (0) ;
          parentContent = transform.GetChild (1) ;
          tabBtnsNum = parentBtns.childCount ;
@@ -129,9 +129,13 @@ namespace EasyUI.Tabs {
 
          UpdateThemeColor (themeColor) ;
 
-         if (tabsBtnsHorizontalLayoutGroup == null)
-            tabsBtnsHorizontalLayoutGroup = parentBtns.GetComponent <HorizontalLayoutGroup> () ;
-         tabsBtnsHorizontalLayoutGroup.spacing = tabSpacing ;
+         if (layoutGroup == null)
+            layoutGroup = parentBtns.GetComponent <LayoutGroup> () ;
+
+         if (type == TabsType.Horizontal)
+            ((HorizontalLayoutGroup)layoutGroup).spacing = tabSpacing ;
+         else if (type == TabsType.Vertical)
+            ((VerticalLayoutGroup)layoutGroup).spacing = tabSpacing ;
 
       }
       #endif
