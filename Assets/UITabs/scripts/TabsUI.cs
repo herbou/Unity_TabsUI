@@ -12,9 +12,7 @@ namespace EasyUI.Tabs {
    }
    public abstract class TabsUI : MonoBehaviour {
 
-      [System.Serializable] public class TabsUIEvent : UnityEvent <int> {
-
-      }
+      [System.Serializable] public class TabsUIEvent : UnityEvent <int> { }
 
       [Header ("Tabs customization :")]
       [SerializeField] private Color themeColor = Color.gray ;
